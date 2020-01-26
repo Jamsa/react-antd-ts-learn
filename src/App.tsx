@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Example from './Example';
+import { Link } from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
@@ -19,6 +21,8 @@ const App: React.FC = () => {
           Learn React
         </a>
       </header>
+      <Example name="hello"></Example>
+      <Link to="/hello">Hello</Link>
     </div>
   );
 }
