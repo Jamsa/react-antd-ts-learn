@@ -10,7 +10,12 @@ Mock.mock('/demo/query','post',{
         'fullname':'@ctitle(2,4)',
         'birthday':Random.date()
     }]
-}) 
+})
+
+Mock.mock('/demo/save','post',{
+    success:true,
+    message:'保存成功',  
+})
 
 Mock.mock(/\/demo\/delete\/.+/,'delete',{
     success:true,
