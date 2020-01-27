@@ -1,7 +1,9 @@
-import React, { useEffect, ReducerAction, useReducer, Dispatch, useContext } from "react"
+import React, { useEffect, useReducer, Dispatch, useContext } from "react"
 import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom'
 import App from "./App"
 import Button from 'antd/es/button'
+import Demo from "./Demo"
+import './mock/mock';
 
 export interface GlobalState{
     token:string;
@@ -39,6 +41,7 @@ function Main(){
             <Router>
                 <Switch>
                     <Route path="/hello"><Hello/></Route>
+                    <Route path="/demo"><Demo name="aa"/></Route>
                     <Route path="/"><App/></Route>
                 </Switch>
             </Router>
@@ -48,9 +51,14 @@ function Main(){
 export default Main
 
 export function Hello(){
+    let {state,dispatch} = useContext(GlobalContext)
+
     useEffect(()=>{
         document.title = 'Hello'
     })
-    let {state} = useContext(GlobalContext)
-return (<div><Button type="primary">Button</Button><Link to="/">{state.username}根目录</Link></div>)
+    function handleClick(){
+        dispatch({type:'SET_USERNAME',payload:'BBBB'})
+    }
+    
+    return (<div><Button type="primary" onClick={()=>handleClick()}>Button</Button><Link to="/">{state.username}根目录</Link></div>)
 }

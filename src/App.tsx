@@ -22,7 +22,8 @@ const App: React.FC = () => {
         </a>
       </header>
       <Example name="hello"></Example>
-      <Link to="/hello">Hello</Link>
+      <Link to="/hello">Hello</Link><br/>
+      <Link to="/demo">Demo</Link><br/>
     </div>
   );
 }
