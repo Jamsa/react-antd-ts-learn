@@ -1,14 +1,14 @@
 import React from "react"
 import Button from 'antd/es/button'
-import useApi from './components/hooks'
-import { Table } from "antd";
+import { Table, Divider, Popconfirm } from "antd";
+import {useQuery} from "./hooks";
 
 export interface DemoProps{
     name: string;
 }
 
 const Demo: React.FC<DemoProps> = (props)=>{
-    const {listState,query} = useApi();
+    const {listState,query,del} = useQuery({code:'demo'});
 
     function handleClick(){
         query({})
@@ -20,6 +20,25 @@ const Demo: React.FC<DemoProps> = (props)=>{
         {title:'用户名',dataIndex:'username',key:'username'},
         {title:'姓名',dataIndex:'fullname',key:'fullname'},
         {title:'生日',dataIndex:'birthday',key:'birthday'},
+        {
+            title: '操作',
+            key: 'action',
+            render: (text:string, record:any) => (
+              <span>
+                {/*<a>操作 {record.fullname}</a>
+                <Divider type="vertical" />*/}
+                <Popconfirm
+                    placement="topRight"
+                    title="删除确认?"
+                    onConfirm={()=>del(record.userId)}
+                    okText="是"
+                    cancelText="否"
+                >
+                    <a>删除</a>
+                </Popconfirm>
+              </span>
+            ),
+          },
     ]
     return (
         <div>
