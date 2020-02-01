@@ -8,7 +8,7 @@ Mock.mock('/demo/query','post',{
         'userId|5':'',
         'username|8':'',
         'fullname':'@ctitle(2,4)',
-        'birthday':Random.date()
+        'birthday': Random.date('yyyy-MM-dd')
     }]
 })
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import fetch from "../components/fetch";
+import fetch from "../api/fetch";
 
 interface ListState{
     page:number;
@@ -36,7 +36,8 @@ export function useQuery(options:QueryPageOptions){
     
 
     const defaultQueryOptions = {
-        queryUrl:`/${options.code}/query`
+        queryUrl:`/${options.code}/query`,
+        success:function(data:any){}
     }
     async function query(conditions:object,queryOpts?:QueryOptions){
         const opts = {...defaultQueryOptions,...queryOpts}
@@ -44,6 +45,7 @@ export function useQuery(options:QueryPageOptions){
         setListState({...listState,loading:true})
         try{
             const result = await fetch.post(opts.queryUrl)
+            opts.success(result)
             setListState({...listState,data:result.data,loading:false,addRows:[],delRows:[],updateRows:[]})
             return result;
         }catch(err){
@@ -117,6 +119,7 @@ export function useQuery(options:QueryPageOptions){
         listState.data.find((value)=>{
             if(value[options.keyName]===record[options.keyName]){
                 Object.assign(value,record)
+                listState.updateRows.push(value)
                 setListState({...listState})
                 return;
             }
