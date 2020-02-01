@@ -15,35 +15,34 @@ interface ListState{
 interface QueryPageOptions{
     code:string;
     keyName:string;
-    queryUrl?:string;
+    //queryUrl?:string;
     pageable?:boolean;
 }
 
 interface QueryOptions{
-    queryUrl?:string;
+    url?:string;
 }
 interface DelOptions{
     autoRefresh?:boolean;
-    delUrl?:string;
+    url?:string;
 }
 interface SaveOptions{
     autoRefresh?:boolean;
-    saveUrl?:string;
+    url?:string;
 }
 
 export function useQuery(options:QueryPageOptions){
     const [listState,setListState] = useState<ListState>({page:1,pageSize:10,conditions:{},data:[],loading:false,delRows:[],addRows:[],updateRows:[]})
     
-
-    const defaultQueryOptions = {
-        queryUrl:`/${options.code}/query`
+    const defaultQueryOptions:QueryOptions = {
+        url:`/${options.code}/query`
     }
     async function query(conditions:object,queryOpts?:QueryOptions){
-        const opts = {...defaultQueryOptions,...queryOpts}
+        const opts = {...defaultQueryOptions,...queryOpts||{}}
 
         setListState({...listState,loading:true})
         try{
-            const result = await fetch.post(opts.queryUrl)
+            const result = await fetch.post(`${opts.url}`)
             setListState({...listState,data:result.data,loading:false,addRows:[],delRows:[],updateRows:[]})
             return result;
         }catch(err){
@@ -52,16 +51,16 @@ export function useQuery(options:QueryPageOptions){
         }
     }
 
-    const defaultDelOptions = {
+    const defaultDelOptions:DelOptions = {
         autoRefresh:true,
-        delUrl:`/${options.code}/delete`,
+        url:`/${options.code}/delete`,
     }
     async function del(id:any,delOpts?:DelOptions){
         const opts = {...defaultDelOptions,...delOpts}
         
         setListState({...listState,loading:true})
         try{
-            const result = await fetch.delete(opts.delUrl+'/'+id)
+            const result = await fetch.delete(`${opts.url}/${id}`)
             if(opts.autoRefresh){
                 query({})
             }
@@ -73,16 +72,16 @@ export function useQuery(options:QueryPageOptions){
         }
     }
 
-    const defaultSaveOptions = {
+    const defaultSaveOptions:SaveOptions = {
         autoRefresh:true,
-        saveUrl:`/${options.code}/save`,
+        url:`/${options.code}/save`,
     }
     async function save(saveOpts?:SaveOptions){
         const opts = {...defaultSaveOptions,...saveOpts}
         
         setListState({...listState,loading:true})
         try{
-            const result = await fetch.post(opts.saveUrl,{addRows:listState.addRows,updateRows:listState.updateRows,delRows:listState.delRows})
+            const result = await fetch.post(`${opts.url}`,{addRows:listState.addRows,updateRows:listState.updateRows,delRows:listState.delRows})
             if(opts.autoRefresh){
                 query({})
             }
