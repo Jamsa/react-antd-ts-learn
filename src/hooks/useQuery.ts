@@ -34,27 +34,15 @@ interface SaveOptions{
 export function useQuery(options:QueryPageOptions){
     const [listState,setListState] = useState<ListState>({page:1,pageSize:10,conditions:{},data:[],loading:false,delRows:[],addRows:[],updateRows:[]})
     
-<<<<<<< HEAD
     const defaultQueryOptions:QueryOptions = {
         url:`/${options.code}/query`
-=======
-
-    const defaultQueryOptions = {
-        queryUrl:`/${options.code}/query`,
-        success:function(data:any){}
->>>>>>> 04c39ec8160465d46fa8781fb6241e937061cf67
     }
     async function query(conditions:object,queryOpts?:QueryOptions){
         const opts = {...defaultQueryOptions,...queryOpts||{}}
 
         setListState({...listState,loading:true})
         try{
-<<<<<<< HEAD
             const result = await fetch.post(`${opts.url}`)
-=======
-            const result = await fetch.post(opts.queryUrl)
-            opts.success(result)
->>>>>>> 04c39ec8160465d46fa8781fb6241e937061cf67
             setListState({...listState,data:result.data,loading:false,addRows:[],delRows:[],updateRows:[]})
             return result;
         }catch(err){
