@@ -2,6 +2,8 @@ import React from "react"
 import Button from 'antd/es/button'
 import { Table, Divider, Popconfirm, Spin, Row, Col } from "antd";
 import {useQuery} from "./hooks";
+import { EditableFormRow, EditableCell } from "./components/CellEditTable";
+
 
 export interface DemoProps{
     name: string;
@@ -14,9 +16,15 @@ const Demo: React.FC<DemoProps> = (props)=>{
     const columns = [
         {title:'主键',dataIndex:'userId',key:'userId'},
         //{title:'ID',dataIndex:'userId',key:'userId'},
-        {title:'用户名',dataIndex:'username',key:'username'},
-        {title:'姓名',dataIndex:'fullname',key:'fullname'},
-        {title:'生日',dataIndex:'birthday',key:'birthday'},
+        {title:'用户名',dataIndex:'username',key:'username',editable:true,onCell:(record:any)=>({
+            record,editable:true,dataIndex:'username',handleSave:localUpdate,title:'用户名'
+        })},
+        {title:'姓名',dataIndex:'fullname',key:'fullname',onCell:(record:any)=>({
+            record,editable:true,dataIndex:'fullname',handleSave:localUpdate,title:'姓名'
+        })},
+        {title:'生日',dataIndex:'birthday',key:'birthday',onCell:(record:any)=>({
+            record,editable:true,dataIndex:'birthday',handleSave:localUpdate,title:'生日',editType:'date'
+        })},
         {
             title: '操作',
             key: 'action',
@@ -49,6 +57,13 @@ const Demo: React.FC<DemoProps> = (props)=>{
             ),
           },
     ]
+    const components = {
+        body: {
+          row: EditableFormRow,
+          cell: EditableCell,
+        },
+      };
+
     return (
         <div>
             <Row>
@@ -62,15 +77,14 @@ const Demo: React.FC<DemoProps> = (props)=>{
                 </Col>
             </Row>
             <Col span={24}>
-            {listState.loading ?(
+            <Table components={components} dataSource={dataSource} columns={columns} loading={listState.loading} />
+                {/*listState.data.map((value,index)=>{
+                    return <li key={index}>{value['userId']}</li>
+                }){listState.loading ?(
                 <Spin/>
             ):(
-                <Table dataSource={dataSource} columns={columns} />
-                /*listState.data.map((value,index)=>{
-                    return <li key={index}>{value['userId']}</li>
-                })*/
-
-            )}
+            )}*/}
+            
             </Col>
         </div>
     )
