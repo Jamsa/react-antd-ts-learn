@@ -118,8 +118,9 @@ export function useQuery(options:QueryPageOptions){
                 Object.assign(value,record)
                 listState.updateRows.push(value)
                 setListState({...listState})
-                return;
+                return true
             }
+            return false
         })
     }
 

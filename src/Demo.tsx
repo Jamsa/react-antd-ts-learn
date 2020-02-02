@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useState } from "react"
 import Button from 'antd/es/button'
 import { Table, Divider, Popconfirm, Spin, Row, Col } from "antd";
 import {useQuery} from "./hooks";
 import { EditableFormRow, EditableCell } from "./components/CellEditTable";
+import DemoForm from "./DemoForm";
 
 
 export interface DemoProps{
@@ -11,8 +12,14 @@ export interface DemoProps{
 
 const Demo: React.FC<DemoProps> = (props)=>{
     const {listState,query,del,save,localDel,localAdd,localUpdate} = useQuery({code:'demo',keyName:'userId'});
-
     const dataSource = listState.data
+    
+    const [formProps,setFormProps] = useState({visible:false,record:{}})
+
+    const formEdit = (data:any)=>{
+        //record.visible=true
+        setFormProps({visible:true,record:data})
+    }
     const columns = [
         {title:'主键',dataIndex:'userId',key:'userId'},
         //{title:'ID',dataIndex:'userId',key:'userId'},
@@ -53,6 +60,8 @@ const Demo: React.FC<DemoProps> = (props)=>{
                 </Popconfirm>
                 <Divider type="vertical" />
                 <a onClick={()=>localUpdate({userId:record.userId,fullname:'aaaa'})}>本地修改</a>
+                <Divider type="vertical" />
+                <a onClick={()=>formEdit(record)}>弹窗修改</a>
               </span>
             ),
           },
@@ -86,6 +95,7 @@ const Demo: React.FC<DemoProps> = (props)=>{
             )}*/}
             
             </Col>
+            <DemoForm record={formProps.record} onSave={(data)=>localUpdate(data)}/>
         </div>
     )
 }

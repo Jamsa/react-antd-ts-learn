@@ -1,10 +1,15 @@
 import { useState } from "react"
-import fetch from "../components/fetch"
+import fetch from "../api/fetch";
+
+export interface EditProps{
+    record:any
+}
 
 //hook的参数
 interface EditPageOptions{
     code:string
     keyName:string
+    form:any //Form高阶组件注入的属性
     /*ajaxLoad:boolean
     createUrl:string
     loadUrl:string
@@ -105,6 +110,7 @@ export function useEdit(options:EditPageOptions){
     }
 
     function localLoad(data:any){
-        setEditState({...editState,record:data,isNew:false,loading:false,visible:true})
+        setEditState({record:data,isNew:false,loading:false,visible:true})
     }
+    return {create,save,load,localLoad,localSave,validate,editState}
 }
