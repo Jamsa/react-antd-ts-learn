@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Form, Button, Input, Icon, Drawer } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { EditProps, useEdit } from "./hooks/useEdit";
-import { WrappedFormUtils } from "antd/lib/form/Form";
+import Item from "./components/Item";
+
+//import { WrappedFormUtils } from "antd/lib/form/Form";
 
 interface DemoFormProps extends EditProps{
-    record:any
-    form: WrappedFormUtils<any>
     onSave?:(record:any)=>void
 }
 
@@ -82,6 +82,9 @@ const DemoForm: React.FC<DemoFormProps & FormComponentProps> = (props)=>{
         />,
       )}
     </Form.Item>
+    <Item label="用户名" name="username" 
+    rules={[{ required: true, message: '请输入姓名!' }]}
+    initValue={editState.record.username} form={props.form} editType="text" />
     <Form.Item>
       <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
         保存
@@ -90,4 +93,4 @@ const DemoForm: React.FC<DemoFormProps & FormComponentProps> = (props)=>{
   </Form></Drawer>)
 }
 
-export default Form.create<DemoFormProps>()(DemoForm)
+export default Form.create<DemoFormProps&FormComponentProps>()(DemoForm)

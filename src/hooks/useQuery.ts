@@ -1,34 +1,34 @@
-import { useState } from "react";
-import fetch from "../api/fetch";
+import { useState } from "react"
+import fetch from "../api/fetch"
 
 interface ListState{
-    page:number;
-    pageSize:number;
-    conditions:object;
-    data:Array<any>;
-    loading:boolean;
-    delRows:Array<any>;
-    addRows:Array<any>;
-    updateRows:Array<any>;
+    page:number
+    pageSize:number
+    conditions:object
+    data:Array<any>
+    loading:boolean
+    delRows:Array<any>
+    addRows:Array<any>
+    updateRows:Array<any>
 }
 
 interface QueryPageOptions{
-    code:string;
-    keyName:string;
-    //queryUrl?:string;
-    pageable?:boolean;
+    code:string
+    keyName:string
+    //queryUrl?:string
+    pageable?:boolean
 }
 
 interface QueryOptions{
-    url?:string;
+    url?:string
 }
 interface DelOptions{
-    autoRefresh?:boolean;
-    url?:string;
+    autoRefresh?:boolean
+    url?:string
 }
 interface SaveOptions{
-    autoRefresh?:boolean;
-    url?:string;
+    autoRefresh?:boolean
+    url?:string
 }
 
 export function useQuery(options:QueryPageOptions){

@@ -7,7 +7,7 @@ import DemoForm from "./DemoForm";
 
 
 export interface DemoProps{
-    name: string;
+    name: string
 }
 
 const Demo: React.FC<DemoProps> = (props)=>{

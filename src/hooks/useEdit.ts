@@ -1,6 +1,7 @@
 import { useState } from "react"
 import fetch from "../api/fetch";
 
+//编辑界面的props
 export interface EditProps{
     record:any
 }
@@ -20,7 +21,7 @@ interface EditPageOptions{
 interface EditState{
     record:any
     loading:boolean
-    visible:boolean
+    //visible:boolean
     isNew:boolean
     subGrids?:{
         code:string
@@ -47,7 +48,7 @@ interface SaveOptions{
 }
 
 export function useEdit(options:EditPageOptions){
-    const [editState,setEditState] = useState<EditState>({record:{},isNew:true,loading:false,visible:false})
+    const [editState,setEditState] = useState<EditState>({record:{},isNew:true,loading:false})
 
     const defaultCreateOptions:CreateOptions = {
         url:`/${options.code}/create`
@@ -55,7 +56,7 @@ export function useEdit(options:EditPageOptions){
     async function create(createOpts?:CreateOptions){
         const opts = {...defaultCreateOptions,...createOpts||{}}
 
-        setEditState({...editState,isNew:false,loading:true,visible:true})
+        setEditState({...editState,isNew:false,loading:true})
         try{
             const data = await fetch.get(`${opts.url}`)
             setEditState({...editState,...data,loading:false})
@@ -71,7 +72,7 @@ export function useEdit(options:EditPageOptions){
     async function load(id:string,loadOpts?:LoadOptions){
         const opts = {...defaultLoadOptions,...loadOpts||{}}
 
-        setEditState({...editState,isNew:false,loading:true,visible:true})
+        setEditState({...editState,isNew:false,loading:true})
         try{
             const data = await fetch.get(`${opts.url}/${id}`)
             setEditState({...editState,...data,loading:false})
@@ -92,7 +93,7 @@ export function useEdit(options:EditPageOptions){
         setEditState({...editState,loading:true})
         try{
             const data = await fetch.post(`${opts.url}`,editState)
-            setEditState({...editState,...data,isNew:false,loading:false,visible:false})
+            setEditState({...editState,...data,isNew:false,loading:false})
         }catch(err){
             setEditState({...editState,loading:false})
             throw err
@@ -105,12 +106,12 @@ export function useEdit(options:EditPageOptions){
 
     //本地保存，只返回数据
     function localSave(){
-        setEditState({...editState,isNew:false,visible:false})
+        setEditState({...editState,isNew:false})
         return editState
     }
 
     function localLoad(data:any){
-        setEditState({record:data,isNew:false,loading:false,visible:true})
+        setEditState({record:data,isNew:false,loading:false})
     }
     return {create,save,load,localLoad,localSave,validate,editState}
 }
