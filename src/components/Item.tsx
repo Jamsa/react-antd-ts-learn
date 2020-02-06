@@ -7,7 +7,8 @@ import { Icon } from 'antd'
 export interface ItemProps{
     name:string
     label?:string
-    inputType:'text'|'date'|'number'
+    inputType:string
+    renderType?:'inline'|'cell'|'form'
     inputProps?:any
     rules:Array<any>
     initValue:any
@@ -15,24 +16,15 @@ export interface ItemProps{
     fieldOptions?:GetFieldDecoratorOptions
     form:WrappedFormUtils
 }
+type RenderItemProps = Pick<ItemProps,'renderType'|'inputType'>
+
 const Item: React.FC<ItemProps> = (props)=>{
     return (renderFormItem(props));
-    /*const {inputProps,name,label,rules,initValue,itemProps,form} = props
-    const error = form.getFieldError(name)
-    return (
-        <Form.Item label={label} validateStatus={error? 'error' : ''} help={error || ''}>
-      {form.getFieldDecorator(name, {
-        rules: rules,
-        initialValue:initValue,
-      })(
-        <Input {...inputProps}/>,
-      )}
-    </Form.Item>)*/
 }
 
 export default Item
 
-type RenderFunction=(props: any)=>React.Component
+type RenderFunction=(itemProps:RenderItemProps,props: any)=>JSX.Element
 
 const registry = new Map<string,RenderFunction>()
 
@@ -40,13 +32,16 @@ export function registItem(itemType:string,render:RenderFunction){
     registry.set(itemType,render)
 }
 
-function renderItem(itemType:string,props:any){
-    const renderFunction = registry.get(itemType)
-    if(renderFunction){
-        return renderFunction(props)
-    }else{
+//function renderItem(itemType:string,props:any){
+function renderItem(itemProps:RenderItemProps,props:any){  
+    let renderFunction = registry.get(itemProps.inputType)
+    if(renderFunction===undefined){
+      renderFunction = registry.get("_default_")
         //未注册的按文本项渲染
-        return (<Input {...props}/>)
+        //return (<Input {...props}/>)
+    }
+    if(renderFunction){
+      return renderFunction(itemProps,props)
     }
 }
 
@@ -54,7 +49,8 @@ function renderFormItem(props:ItemProps){
     const {inputProps,name,label,rules,initValue,itemProps,form,fieldOptions} = props
 
     const error = form.getFieldError(name)
-    let itmProps:FormItemProps = {label:label,
+    let itmProps:FormItemProps = {
+        label:label,
         validateStatus:error? 'error' : '',
         help:error||''
     }
@@ -68,7 +64,18 @@ function renderFormItem(props:ItemProps){
     return (
     <Form.Item {...itmProps}>
       {form.getFieldDecorator(name, fieldOpts)(
-        renderItem(props.inputType,inputProps),
+        renderItem(props as RenderItemProps,inputProps),
       )}
     </Form.Item>)
 }
+
+const defaultRenderFunction:RenderFunction=(itemProps:RenderItemProps,props:any)=>{
+  if(itemProps.renderType==='cell'){
+    props.onPressEnter = props.onBlur //认为onBlur会从表格中传过来
+  }
+  return (<Input {...props}/>)
+}
+
+registItem('_default_',defaultRenderFunction)
+
+//registItem('date',dateRenderFunction);

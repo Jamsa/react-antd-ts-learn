@@ -51,9 +51,10 @@ export function EditableCell(props:any){
       initValue:record[dataIndex],
       form:form, 
       inputType:inputType,
+      renderType:'cell',
       inputProps:{
         ref:input, 
-        onPressEnter:(e:any)=>save(e),
+        //onPressEnter:(e:any)=>save(e),
         onBlur:(e:any)=>save(e)
       }
     };
