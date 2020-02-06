@@ -81,6 +81,8 @@ export function EditableCell(props:any){
     index,
     handleSave,
     children,
+    inputType,
+    renderType,
     ...restProps
   } = props;
 

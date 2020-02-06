@@ -30,7 +30,7 @@ const Demo: React.FC<DemoProps> = (props)=>{
             record,editable:true,dataIndex:'fullname',handleSave:localUpdate,title:'姓名'
         })},
         {title:'生日',dataIndex:'birthday',key:'birthday',onCell:(record:any)=>({
-            record,editable:true,dataIndex:'birthday',handleSave:localUpdate,title:'生日',edittype:'date'
+            record,editable:true,dataIndex:'birthday',handleSave:localUpdate,title:'生日',inputType:'date'
         })},
         {
             title: '操作',
