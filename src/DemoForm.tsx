@@ -27,8 +27,11 @@ const DemoForm: React.FC<DemoFormProps & FormComponentProps> = (props)=>{
             props.form.resetFields()
             localLoad(record)
             //setFieldsValue(editState.record)
+            setVisible(true)
+        }else{
+          setVisible(false)
         }
-        setVisible(true)
+        
     },[record])
 
     const handleSubmit = (e:any) => {

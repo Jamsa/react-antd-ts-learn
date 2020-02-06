@@ -64,7 +64,7 @@ export function EditableCell(props:any){
     ) : (
       <div
         className="editable-cell-value-wrap"
-        style={{ paddingRight: 24 }}
+        style={{ paddingRight: 24 ,minHeight: 20,minWidth:20}}
         onClick={toggleEdit}
       >
         {children}
