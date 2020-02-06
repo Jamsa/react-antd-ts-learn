@@ -4,11 +4,11 @@ import Form, { FormItemProps } from 'antd/lib/form'
 import { WrappedFormUtils, GetFieldDecoratorOptions } from 'antd/lib/form/Form'
 import { Icon } from 'antd'
 
-interface ItemProps{
+export interface ItemProps{
     name:string
-    label:string
-    editType:'text'|'date'|'number'
-    inputProps?:InputProps
+    label?:string
+    inputType:'text'|'date'|'number'
+    inputProps?:any
     rules:Array<any>
     initValue:any
     itemProps?:FormItemProps
@@ -16,7 +16,8 @@ interface ItemProps{
     form:WrappedFormUtils
 }
 const Item: React.FC<ItemProps> = (props)=>{
-    const {inputProps,name,label,rules,initValue,itemProps,form} = props
+    return (renderFormItem(props));
+    /*const {inputProps,name,label,rules,initValue,itemProps,form} = props
     const error = form.getFieldError(name)
     return (
         <Form.Item label={label} validateStatus={error? 'error' : ''} help={error || ''}>
@@ -26,7 +27,7 @@ const Item: React.FC<ItemProps> = (props)=>{
       })(
         <Input {...inputProps}/>,
       )}
-    </Form.Item>)
+    </Form.Item>)*/
 }
 
 export default Item
@@ -39,18 +40,19 @@ export function registItem(itemType:string,render:RenderFunction){
     registry.set(itemType,render)
 }
 
-export function renderItem(itemType:string,props:any){
+function renderItem(itemType:string,props:any){
     const renderFunction = registry.get(itemType)
     if(renderFunction){
-        renderFunction(props)
+        return renderFunction(props)
     }else{
         //未注册的按文本项渲染
         return (<Input {...props}/>)
     }
 }
 
-export function renderFormItem(props:ItemProps){
+function renderFormItem(props:ItemProps){
     const {inputProps,name,label,rules,initValue,itemProps,form,fieldOptions} = props
+
     const error = form.getFieldError(name)
     let itmProps:FormItemProps = {label:label,
         validateStatus:error? 'error' : '',
@@ -59,14 +61,14 @@ export function renderFormItem(props:ItemProps){
     //label={label} validateStatus={error? 'error' : ''} help={error || ''}
     itmProps={...itmProps,...itemProps}
     let fieldOpts:GetFieldDecoratorOptions = {
-        rules:rules,
+        rules:rules||[],
         initialValue:initValue
     }
     fieldOpts = {...fieldOpts,...fieldOptions}
     return (
-        <Form.Item {...itmProps}>
-      {form.getFieldDecorator(name, fieldOptions)(
-        renderItem(props.editType,inputProps),
+    <Form.Item {...itmProps}>
+      {form.getFieldDecorator(name, fieldOpts)(
+        renderItem(props.inputType,inputProps),
       )}
     </Form.Item>)
 }

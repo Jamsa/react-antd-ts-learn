@@ -60,31 +60,13 @@ const DemoForm: React.FC<DemoFormProps & FormComponentProps> = (props)=>{
           visible={visible}
         >
     <Form layout="inline" onSubmit={handleSubmit}>
-    <Form.Item validateStatus={usernameError ? 'error' : ''} help={usernameError || ''}>
-      {getFieldDecorator('username', {
-        rules: [{ required: true, message: '请输入用户名!' }],
-        initialValue:editState.record.username,
-      })(
-        <Input
-          prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-          placeholder="用户名"
-        />,
-      )}
-    </Form.Item>
-    <Form.Item validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
-      {getFieldDecorator('fullname', {
-        rules: [{ required: true, message: '请输入姓名!' }],
-        initialValue:editState.record.fullname,
-      })(
-        <Input
-          prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-          placeholder="姓名"
-        />,
-      )}
-    </Form.Item>
     <Item label="用户名" name="username" 
+    rules={[{ required: true, message: '请输入用户名!' }]}
+    initValue={editState.record.username} form={props.form} inputType="text" />
+    <Item label="姓名" name="fullname" 
     rules={[{ required: true, message: '请输入姓名!' }]}
-    initValue={editState.record.username} form={props.form} editType="text" />
+    initValue={editState.record.fullname} form={props.form} inputType="text" />
+    
     <Form.Item>
       <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
         保存

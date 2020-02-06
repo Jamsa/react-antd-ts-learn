@@ -1,9 +1,7 @@
 import { Form, DatePicker } from "antd";
 import React, { useState, useRef, useEffect } from "react";
-import Input, { InputProps } from "antd/lib/input";
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-moment.locale('zh-cn');
+//import Input, { InputProps } from "antd/lib/input";
+import Item,{ItemProps} from "./Item";
 
 const EditableContext = React.createContext({} as any);
 
@@ -33,7 +31,7 @@ export function EditableCell(props:any){
   }
 
   const renderCell = (form:any) => {
-    const { children, dataIndex, record, title, handleSave } = props;
+    const { children, dataIndex, record, title, handleSave,inputType,rules } = props;
 
     const save = (e:any)=> {
       form.validateFields((error:any, values:any) => {
@@ -45,26 +43,23 @@ export function EditableCell(props:any){
       });
     }
 
-    const renderElement = (props:any)=>{
-      if(props.editType==='date'){
-        return <DatePicker ref={input} onChange={save} onBlur={save} />
-      }else{
-        return <Input ref={input} onPressEnter={save} onBlur={save} />
+    const itemProps:ItemProps = {
+      //label:"用户名",
+      //label:'',
+      name:dataIndex,
+      rules:rules,
+      initValue:record[dataIndex],
+      form:form, 
+      inputType:inputType,
+      inputProps:{
+        ref:input, 
+        onPressEnter:(e:any)=>save(e),
+        onBlur:(e:any)=>save(e)
       }
-    }
+    };
     
     return editing ? (
-      <Form.Item style={{ margin: 0 }}>
-        {form.getFieldDecorator(dataIndex, {
-          rules: [
-            {
-              required: true,
-              message: `${title} 不允许为空`,
-            },
-          ],
-          initialValue: record[dataIndex],//moment(record[dataIndex],'YYYY-MM-DD'),
-        })(renderElement(props))}
-      </Form.Item>
+      <Item {...itemProps}/>
     ) : (
       <div
         className="editable-cell-value-wrap"
